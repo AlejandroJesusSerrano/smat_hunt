@@ -153,7 +153,7 @@ class Employee(models.Model):
   employee_name = models.CharField(max_length = 50, verbose_name = 'Nombre del Empleado')
   employee_last_name = models.CharField(max_length = 50, verbose_name = 'Apellido')
   cuil = models.CharField(max_length = 11, verbose_name = 'cuil')
-  status = models.CharField(max_length = 30, choices = STATUS_CHOICES, default = ACTIVO, verbose_name = 'Estado')
+  status = models.CharField(max_length = 30, choices = STATUS_CHOICES, verbose_name = 'Estado')
   user_pc = models.CharField(max_length = 11, verbose_name = 'Nombre de Usuario')
   office = models.ForeignKey(Office, related_name = 'employee_office', verbose_name = 'Oficina',  on_delete = models.CASCADE,)
   avatar = models.ImageField(upload_to='img_avatars/%Y/%m/%d', null = True, blank = True, verbose_name = 'Avatar')
