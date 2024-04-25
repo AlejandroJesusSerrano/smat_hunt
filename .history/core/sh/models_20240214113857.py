@@ -107,23 +107,25 @@ class Office(models.Model):
     (SALTA, 'SALTA'),
   ]
 
-  CITY_CHOICES = [
-    (SALTA_CAPITAL, 'SALTA CAPITAL'),
-    (ORAN, 'SAN RAMON DE LA NUEVA ORAN'),
-    (TARTAGAL, 'TARTAGAL'),
-    (SAN_SALVADOR, 'SAN SALVADOR DE JUJUY')
-  ]
+  CITY_CHOICES = {
+    JUJUY: [SAN_SALVADOR],
+    SALTA: [SALTA_CAPITAL, ORAN, TARTAGAL],
+  }
+  
+  def city_choices(self):
+    return self.CITY_CHOICES.get(self.province, [])
 
-  province = models.CharField(max_length = 50, choices=PROVINCE_CHOICES, default = SALTA, verbose_name = 'Provincia')
-  city = models.CharField(max_length = 50, choices =CITY_CHOICES, default = SALTA_CAPITAL, verbose_name = 'Localidad')
+  province = models.CharField(max_length = 50, choices = PROVINCE_CHOICES, default = SALTA, verbose_name = 'Provincia')
+  city = models.CharField(max_length = 50, choices = [], default = SALTA_CAPITAL, verbose_name = 'Localidad')
   edifice = models.ForeignKey(Edifice, related_name='office_edifice', verbose_name = 'Edificio', on_delete = models.CASCADE)
+  address = models.TextField(verbose_name = 'Domicilio')
   office = models.CharField(max_length = 50, verbose_name = 'Oficina')
   dependency = models.ForeignKey(Dependency, on_delete=models.CASCADE,related_name = 'office_dependency', verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self, *args, **kwargs):
-    self.city = self.CITY_CHOICES.get(self.province, [])[0]
+    self.city = self.city_choices.get(self.province, [])[0] if self.province else ''
     super().save(*args, **kwargs)
 
   def __str__(self):

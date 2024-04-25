@@ -107,16 +107,15 @@ class Office(models.Model):
     (SALTA, 'SALTA'),
   ]
 
-  CITY_CHOICES = [
-    (SALTA_CAPITAL, 'SALTA CAPITAL'),
-    (ORAN, 'SAN RAMON DE LA NUEVA ORAN'),
-    (TARTAGAL, 'TARTAGAL'),
-    (SAN_SALVADOR, 'SAN SALVADOR DE JUJUY')
-  ]
+  CITY_CHOICES = {
+    JUJUY: [SAN_SALVADOR],
+    SALTA: [SALTA_CAPITAL, ORAN, TARTAGAL],
+  }
 
   province = models.CharField(max_length = 50, choices=PROVINCE_CHOICES, default = SALTA, verbose_name = 'Provincia')
-  city = models.CharField(max_length = 50, choices =CITY_CHOICES, default = SALTA_CAPITAL, verbose_name = 'Localidad')
+  city = models.CharField(max_length = 50, choices = [SALTA_CAPITAL, ORAN], default = SALTA_CAPITAL, verbose_name = 'Localidad')
   edifice = models.ForeignKey(Edifice, related_name='office_edifice', verbose_name = 'Edificio', on_delete = models.CASCADE)
+  address = models.TextField(verbose_name = 'Domicilio')
   office = models.CharField(max_length = 50, verbose_name = 'Oficina')
   dependency = models.ForeignKey(Dependency, on_delete=models.CASCADE,related_name = 'office_dependency', verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
